@@ -20,6 +20,8 @@
 
     <properties>
         <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <dependencies>
@@ -64,8 +66,16 @@
         </repository>
     </repositories>
     <build>
-        <plugins>
 
+        <!-- ✅ FIX ENCODING JENKINS / MAVEN -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -79,6 +89,7 @@
                 </configuration>
             </plugin>
         </plugins>
+
     </build>
 
     <!-- Configuration pour le déploiement vers Nexus -->
