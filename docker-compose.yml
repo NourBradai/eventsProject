@@ -5,6 +5,7 @@ services:
   mysql:
     image: mysql:8
     container_name: mysql-events
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: eventsProject
@@ -14,21 +15,27 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - events-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build: .
     container_name: events-backend
+    restart: unless-stopped
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     ports:
       - "8090:8089"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/eventsProject
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/eventsProject?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     networks:
       - events-net
-    restart: always
 
 networks:
   events-net:
