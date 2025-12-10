@@ -16,10 +16,11 @@ services:
     networks:
       - events-net
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot" ]
       interval: 10s
       timeout: 5s
       retries: 5
+
 
   backend:
     build: .
